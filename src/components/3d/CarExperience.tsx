@@ -57,10 +57,12 @@ export function CarExperience() {
   const quality: 'mid' | 'high' = env.tier === 'high' ? 'high' : 'mid';
   const ceiling = maxDpr(quality);
 
-  // On touch devices the drei CameraControls put `touch-action: none` on the
-  // canvas, which swallows the vertical swipe the page needs to scroll. The
-  // experience is scroll-driven anyway, so make the stage ignore pointer input
-  // on coarse pointers — the page scrolls, and the on-screen dock still rotates.
+  // On touch devices drei's CameraControls stamps `touch-action: none` on R3F's
+  // own event <div> (which also hard-codes `pointer-events: auto`), so a vertical
+  // swipe rotates the camera instead of scrolling the page. The experience is
+  // scroll-driven anyway, so on coarse pointers we push `pointer-events: none` +
+  // `touch-action: pan-y` straight onto that div via the Canvas `style` prop —
+  // the page scrolls, and the on-screen dock still rotates / zooms the car.
   const touchOnly = env.coarsePointer;
 
   return (
@@ -72,6 +74,11 @@ export function CarExperience() {
     >
       <Canvas
         shadows
+        style={
+          touchOnly
+            ? { pointerEvents: 'none', touchAction: 'pan-y' }
+            : undefined
+        }
         dpr={[1, Math.max(1, ceiling * dprFactor)]}
         gl={{
           antialias: quality === 'high',
