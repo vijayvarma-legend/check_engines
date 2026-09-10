@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --ce-grid: rgba(255, 255, 255, 0.035);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #08090b;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  background-color: #08090b;
+  color: #f3f4f6;
+  font-feature-settings: 'ss01', 'cv01';
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(226, 43, 34, 0.28);
+  color: #fff;
+}
+
+/* Thin premium scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #08090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #262a31;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333842;
+}
+
+@layer components {
+  .ce-shell {
+    @apply mx-auto w-full max-w-content px-6 md:px-10;
+  }
+
+  .ce-eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-wide2 text-ignition;
+  }
+
+  .ce-kicker {
+    @apply font-mono text-[11px] uppercase tracking-wide2 text-chalk-dim;
+  }
+
+  .ce-h2 {
+    @apply text-3xl font-semibold leading-[1.05] tracking-[-0.02em] text-chalk md:text-5xl;
+  }
+
+  .ce-body {
+    @apply text-[15px] leading-relaxed text-chalk-muted md:text-base;
+  }
+
+  .ce-rule {
+    @apply h-px w-full bg-white/10;
+  }
+
+  .ce-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-none border px-5 py-3 font-mono text-[12px] uppercase tracking-wide2 transition-colors duration-300;
+  }
+  .ce-btn-primary {
+    @apply border-ignition bg-ignition text-ink-900 hover:bg-ignition-bright;
+  }
+  .ce-btn-ghost {
+    @apply border-white/20 bg-transparent text-chalk hover:border-white/50 hover:bg-white/[0.04];
+  }
+
+  .ce-hairline-box {
+    @apply border border-white/10 bg-white/[0.015] backdrop-blur-[2px];
+  }
+
+  .ce-tech-grid {
+    background-image:
+      linear-gradient(var(--ce-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ce-grid) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .ce-corner::before,
+  .ce-corner::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: rgba(226, 43, 34, 0.6);
+    border-style: solid;
+  }
+  .ce-corner::before {
+    top: -1px;
+    left: -1px;
+    border-width: 1px 0 0 1px;
+  }
+  .ce-corner::after {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 1px 1px 0;
+  }
+}
+
+/* drei <Html> wrapper should never block canvas drags unless opted in */
+.ce-hotspot-layer {
+  pointer-events: none;
+}
+
+/* Cinema HUD diagnostics checklist */
+.ce-diag-row {
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 0.3s ease;
+}
+.ce-diag-row .ce-diag-mark::after {
+  content: '◦';
+  color: rgba(255, 255, 255, 0.25);
+}
+.ce-diag-row[data-done='1'] {
+  color: #f3f4f6;
+}
+.ce-diag-row[data-done='1'] .ce-diag-mark::after {
+  content: '✓';
+  color: #22c55e;
+}
+
+/*
+ * Transparent sections sit above the fixed 3D canvas. They must let pointer
+ * events fall through to the canvas everywhere except on real controls, so the
+ * car stays draggable through the "empty" parts of the layout.
+ */
+.ce-passthrough {
+  pointer-events: none;
+}
+.ce-passthrough a,
+.ce-passthrough button,
+.ce-passthrough input,
+.ce-passthrough select,
+.ce-passthrough textarea,
+.ce-passthrough label,
+.ce-passthrough [data-interactive] {
+  pointer-events: auto;
+}
