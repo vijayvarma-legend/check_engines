@@ -57,12 +57,18 @@ export function CarExperience() {
   const quality: 'mid' | 'high' = env.tier === 'high' ? 'high' : 'mid';
   const ceiling = maxDpr(quality);
 
+  // On touch devices the drei CameraControls put `touch-action: none` on the
+  // canvas, which swallows the vertical swipe the page needs to scroll. The
+  // experience is scroll-driven anyway, so make the stage ignore pointer input
+  // on coarse pointers — the page scrolls, and the on-screen dock still rotates.
+  const touchOnly = env.coarsePointer;
+
   return (
     <div
-      className="fixed inset-0 z-0"
-      onPointerMove={pokePointer}
-      onPointerDown={pokePointer}
-      onPointerLeave={releasePointer}
+      className={touchOnly ? 'pointer-events-none fixed inset-0 z-0' : 'fixed inset-0 z-0'}
+      onPointerMove={touchOnly ? undefined : pokePointer}
+      onPointerDown={touchOnly ? undefined : pokePointer}
+      onPointerLeave={touchOnly ? undefined : releasePointer}
     >
       <Canvas
         shadows
